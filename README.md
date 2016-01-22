@@ -1,2 +1,2 @@
 # OpenADS
-Scalerble Anomaly Dection System
+Scalable Anomaly Detection System
