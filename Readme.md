@@ -68,5 +68,5 @@ The properties is optional, you could leave it alone and you could use the defau
 
 Contacts
 --------
-SCoRe Lab:info@scorelab.org
-[http://www.scorelab.org](http://www.scorelab.org)
+SCoRe Lab: info@scorelab.org
+Website: [http://www.scorelab.org](http://www.scorelab.org)
