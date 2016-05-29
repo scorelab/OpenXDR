@@ -12,6 +12,7 @@ Contents
 	* [Important prerequisites](#prerequisites)
 	* [How to build](#how-to-build)
 	* [How to run](#how-to-run)
+	* [How to use Docker](#how-to-use-docker)
 * [Contacts](#contacts)
 
 Features
@@ -37,7 +38,7 @@ How to use
 ##### Platforms #####
 The software is tested on Ubuntu 16.04 LTS
 
-##### Important prerequisites #####
+#### Important prerequisites ####
 
 * PCAP receiver
 Pcap4j needs root's right to access network and device. So, before deploying, please ensure to run the following line:
@@ -50,10 +51,10 @@ To ensure the java can run properly, you could run the following:
 	Try `ln -s /usr/local/java/jre/lib/amd64/jli/libjli.so /usr/lib/` Or `echo /usr/local/java/jre/lib/amd64/jli/ > /etc/ld.so.conf`
 Refer to the issue link: https://github.com/kaitoy/pcap4j/issues/63
 
-##### How to build #####
+#### How to build ####
 To build the project, you just need to run the `maven_package.sh` to package the project.
 
-##### How to run #####
+#### How to run ####
 To run the project, you should submit the task to Spark. Below is a demo code:
 
 * To run it locally
@@ -65,6 +66,33 @@ To run the project, you should submit the task to Spark. Below is a demo code:
 The properties is optional, you could leave it alone and you could use the defaul settings, below is the example:
 
 ~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master local[*] ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar
+
+##### How to use Docker #####
+To run it in docker, you could follow the steps below.
+
+* Biuld Docker Container
+docker build -t your_user/your_container_name:version .
+
+* Run Docker Container
+docker run -it -p 8088:8088 -p 8042:8042 -p 4040:4040 -h sandbox your_user/your_container_name:version bash
+
+* To run it on Yarn 
+~/spark/bin/spark-submit \
+--files $SPARK_HOME/conf/metrics.properties \
+--class "com.scorelab.openads.receiver.PcapReceiver" \
+--master yarn-cluster \
+`Path to the jar`/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar \
+`Path to the config`/config.properties
+
+OR:
+~/spark/bin/spark-submit \
+--class "com.scorelab.openads.receiver.PcapReceiver" \
+--master yarn-client \
+`Path to the jar`/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar \
+`Path to the config`/config.properties
+
+* Version
+Hadoop 2.6.0 and Apache Spark v1.6.0 on Centos 
 
 Contacts
 --------
