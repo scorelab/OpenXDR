@@ -1,6 +1,7 @@
 package com.scorelab.openads.data;
 
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.pcap4j.packet.Packet;
@@ -10,7 +11,8 @@ import org.pcap4j.packet.Packet;
  * @author xiaolei
  *
  */
-public class PacketEntity {
+public class PcapPacketEntity implements Serializable{
+	private static final long serialVersionUID = 1L;
 	Timestamp time = null;
 	Packet packet = null;
 	
@@ -19,7 +21,7 @@ public class PacketEntity {
 	 * @param time
 	 * @param packet
 	 */
-	public PacketEntity(Timestamp time, Packet packet) {
+	public PcapPacketEntity(Timestamp time, Packet packet) {
 		this.time = time;
 		this.packet = packet;
 	}

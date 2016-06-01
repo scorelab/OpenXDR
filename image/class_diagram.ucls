@@ -20,8 +20,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="com.scorelab.openads.receiver.PacketEntity" project="OpenADS" 
-    file="/OpenADS/src/main/java/com/scorelab/openads/receiver/PacketEntity.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="com.scorelab.openads.data.PcapPacketEntity" project="OpenADS" 
+    file="/OpenADS/src/main/java/com/scorelab/openads/data/PcapPacketEntity.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="261" y="134"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -38,18 +38,18 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <generalization id="5">    
+  <dependency id="5">    
     <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
   <realization id="6">    
     <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="4"/>  
   </realization>  
-  <dependency id="7">    
+  <generalization id="7">    
     <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="3"/>  
-  </dependency>  
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

@@ -10,12 +10,11 @@ import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.storage.StorageLevel;
-import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.receiver.Receiver;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNetworkInterface;
@@ -25,6 +24,7 @@ import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.packet.Packet;
 
 import com.google.gson.Gson;
+import com.scorelab.openads.data.PcapPacketEntity;
 
 
 /**
@@ -122,7 +122,7 @@ public class PcapReceiver extends Receiver<String>{
 					continue;
 				}else{
 					System.out.println(packet.getHeader().toString());
-					store(gson.toJson(new PacketEntity(handle.getTimestamp(), packet)));
+					store(gson.toJson(new PcapPacketEntity(handle.getTimestamp(), packet)));
 					Thread.sleep(1000);
 				}
 			}
@@ -146,16 +146,8 @@ public class PcapReceiver extends Receiver<String>{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		
 		//Set Logger level
 		Logger.getRootLogger().setLevel(Level.WARN);
-		
-		//Setup configuration, with 0.1 second batch size
-		SparkConf sparkConf = new SparkConf().setAppName("PcapReceiver");
-		
-		final JavaStreamingContext jsc = new JavaStreamingContext(sparkConf, new Duration(30000));
-		JavaReceiverInputDStream<String> lines = jsc.receiverStream(new PcapReceiver(null));;
-		System.out.println("code runs here");
 		
 		/**
 		 * Check user input their own preference for Pcap4j,
@@ -165,51 +157,62 @@ public class PcapReceiver extends Receiver<String>{
 		final Properties config = new Properties();
 		if(args.length > 0){
 			Path path = new Path(args[0]);
-			FileSystem fs =FileSystem.get(path.toUri(), new Configuration());
+			FileSystem fs = FileSystem.get(path.toUri(), new Configuration());
 			config.load(fs.open(path));
-			lines = jsc.receiverStream(new PcapReceiver(config));
-			
-			/**
-			 * Set the path to store data;
-			 * if the path is null or "", it will skip this step;
-			 * and will not save the data to the user-defined path
-			 */
-			String path2savedata = config.getProperty("path2savedata");
-			if(path2savedata != null && path2savedata.trim().length() > 0){
-				lines.dstream().saveAsTextFiles(path2savedata, "");
-				//TODO to add function: use Hadoop_FileUtils to merge the data into single file
-			}
-		}else{
-			lines = jsc.receiverStream(new PcapReceiver(null));
 		}
 		
-		//print those lines below
-		JavaDStream<String> flows = lines.flatMap(new FlatMapFunction<String, String>() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Iterable<String> call(String line) throws Exception {
-				System.out.println("--------------------------------");
-				/**
-				 * Could add any further line process functions here
-				 */
-				System.out.println(line);
-				System.out.println("--------------------------------");
-				return null;
-			}});
-		flows.print();
+		/**
+		 * Setting the checkpoint directory.
+		 */
+		final String checkpointDir = config.getProperty("checkpoint");
 		
-		// Stop streaming service when ctrl+c
-		Runtime.getRuntime().addShutdownHook(new Thread(){
-			public void run()
-			{
-				jsc.stop();
-				jsc.close();
-				System.out.println("---Close PcapReceiver service---");
-			}
-		});
+		/**
+		 * Set the path to store data;
+		 * if the path is null or "", it will skip this step;
+		 * and will not save the data to the user-defined path
+		 */
+		final String path2savedata = config.getProperty("path2savedata");
+		
+		/**
+		 * Configure checkpoint directory for Receiver
+		 */
+		final JavaStreamingContextFactory contextFactory = new JavaStreamingContextFactory(){
+			@Override
+			public JavaStreamingContext create() {
+				//Setup configuration, with 0.1 second batch size
+				SparkConf sparkConf = new SparkConf().setAppName("PcapReceiver");
 				
-		jsc.start();
-	    jsc.awaitTermination();
+				JavaStreamingContext jsc = new JavaStreamingContext(sparkConf, Durations.seconds(3));
+				JavaReceiverInputDStream<String> lines;
+				
+				if(!config.isEmpty()){
+					lines = jsc.receiverStream(new PcapReceiver(config));
+				}else{
+					lines = jsc.receiverStream(new PcapReceiver(null));
+				}
+				
+				if(checkpointDir != null && checkpointDir.trim().length() > 0)
+					jsc.checkpoint(checkpointDir);
+				else
+					jsc.checkpoint("~/checkpoint/");
+				
+				if(path2savedata != null && path2savedata.trim().length() > 0){
+					lines.dstream().saveAsTextFiles(path2savedata, "");
+					//TODO to add function: use Hadoop_FileUtils to merge the data into single file
+				}
+				
+				//print those lines below
+				lines.print();
+				
+				//TODO add functions to take further process
+				return jsc;
+			}
+		};
+		
+		// Get JavaStreamingContext from checkpoint data or create a new one
+		final JavaStreamingContext jsccontext = JavaStreamingContext.getOrCreate(checkpointDir, contextFactory);
+				
+		jsccontext.start();
+		jsccontext.awaitTermination();
 	}
 }
