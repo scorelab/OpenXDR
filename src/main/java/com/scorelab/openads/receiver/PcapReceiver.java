@@ -194,7 +194,7 @@ public class PcapReceiver extends Receiver<String>{
 				if(checkpointDir != null && checkpointDir.trim().length() > 0)
 					jsc.checkpoint(checkpointDir);
 				else
-					jsc.checkpoint("~/checkpoint/");
+					jsc.checkpoint("checkpoint/");
 				
 				if(path2savedata != null && path2savedata.trim().length() > 0){
 					lines.dstream().saveAsTextFiles(path2savedata, "");
