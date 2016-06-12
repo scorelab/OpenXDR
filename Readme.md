@@ -5,13 +5,13 @@ OpenADS is a Big Data analytics framework designed to consume and monitor networ
 Contents
 --------
 * [Features](#features)
+* [System requirements](#system-requirements)
+	* [Dependencies](#dependencies)
+	* [Platforms](#platforms)
+* [Important prerequisites](#prerequisites)
+	* [Pcap](#pcap)
+	* [Syslog](#syslog)
 * [How to use](#how-to-use)
-	* [System requirements](#system-requirements)
-		* [Dependencies](#dependencies)
-		* [Platforms](#platforms)
-	* [Important prerequisites](#prerequisites)
-        *[PCAP](#pcap)
-        *[Syslog](#syslog)
 	* [How to build](#how-to-build)
 	* [How to run](#how-to-run)
 	* [How to use Docker](#how-to-use-docker)
@@ -23,12 +23,11 @@ Features
 * Capture various network data.
 * Support real-time analysis via Machine Learning techniques.
 
-How to use
-----------
 
-#### System requirements ####
+System requirements
+-------------------
 
-##### Dependencies #####
+#### Dependencies ####
 * Java 1.8
 * libpcap 1.1.1
 * WinPcap 4.1.2
@@ -36,13 +35,16 @@ How to use
 * slf4j-api 1.7.12
 * logback-core 1.0.0
 * logback-classic 1.0.0
+* rsyslogd 8.16.0
 
-##### Platforms #####
+#### Platforms ####
 The software is tested on Ubuntu 16.04 LTS
 
-#### Important prerequisites ####
 
-##### PCAP ##### 
+Important prerequisites
+-----------------------
+
+#### Pcap #### 
 Pcap4j needs root's right to access network and device. So, before deploying, please ensure to run the following line:
 	`setcap cap_net_raw,cap_net_admin=eip /path/to/java`
 for example, mine is `setcap cap_net_raw,cap_net_admin=eip /usr/local/java`
@@ -53,16 +55,21 @@ To ensure the java can run properly, you could run the following:
 	Try `ln -s /usr/local/java/jre/lib/amd64/jli/libjli.so /usr/lib/` Or `echo /usr/local/java/jre/lib/amd64/jli/ > /etc/ld.so.conf`
 Refer to the issue link: https://github.com/kaitoy/pcap4j/issues/63
 
-##### Syslog #####
+#### Syslog ####
 For Linux User: to receive syslog data from remote data source, you must do two things:
-* 1. Configure the rsyslog service in data source:
-    After installing rsyslog in Ubuntu or CentOS, you could configure as following:
-    `sudo vim /etc/rsyslog.conf`, add `*.* @Your_IP:Your_Port`\(UDP\) `*.* @@localhost:514`\(TCP\) in the conf file;
-    restart the service `sudo service rsyslog restart`;
-* 2. Allow the port in your Firewall: 
-    iptables -A INPUT -p tcp -s Your_IP --dport Your_Port -j ACCEPT;
-    iptables -A INPUT -p udp -s Your_IP --dport Your_Port -j ACCEPT;
+* Configure the rsyslog service in data source (After installing rsyslog in Ubuntu or CentOS):
+    * `sudo vim /etc/rsyslog.conf`
+    * add `*.* @Your_IP:Your_Port`(UDP) `*.* @@localhost:514`(TCP) in the file;
+    * restart the service `sudo service rsyslog restart`;
+* Allow the port in your Firewall: 
+    * iptables -A INPUT -p tcp -s Your_IP --dport Your_Port -j ACCEPT;
+    * iptables -A INPUT -p udp -s Your_IP --dport Your_Port -j ACCEPT;
+
 For local test, just use localhost and port 514.
+
+
+How to use
+----------
 
 #### How to build ####
 To build the project, you just need to run the `maven_package.sh` to package the project.
@@ -80,7 +87,7 @@ The properties is optional, you could leave it alone and you could use the defau
 
 ~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master local[*] ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar
 
-##### How to use Docker #####
+#### How to use Docker ####
 To run it in docker, you could follow the steps below.
 
 * Biuld Docker Container
