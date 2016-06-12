@@ -28,6 +28,4 @@ ADD configuration /OpenADS/configuration
 
 # Adding source, compile and package it into single jar
 ADD src /OpenADS/src
-RUN ["mvn", "clean"]
-RUN ["mvn", "compile"]
-RUN ["mvn", "assembly:single"]
+RUN ["mvn", "clean”, “compile”, “assembly:single"]

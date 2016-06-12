@@ -10,6 +10,8 @@ Contents
 		* [Dependencies](#dependencies)
 		* [Platforms](#platforms)
 	* [Important prerequisites](#prerequisites)
+        *[PCAP](#pcap)
+        *[Syslog](#syslog)
 	* [How to build](#how-to-build)
 	* [How to run](#how-to-run)
 	* [How to use Docker](#how-to-use-docker)
@@ -40,7 +42,7 @@ The software is tested on Ubuntu 16.04 LTS
 
 #### Important prerequisites ####
 
-* PCAP receiver
+##### PCAP ##### 
 Pcap4j needs root's right to access network and device. So, before deploying, please ensure to run the following line:
 	`setcap cap_net_raw,cap_net_admin=eip /path/to/java`
 for example, mine is `setcap cap_net_raw,cap_net_admin=eip /usr/local/java`
@@ -51,6 +53,17 @@ To ensure the java can run properly, you could run the following:
 	Try `ln -s /usr/local/java/jre/lib/amd64/jli/libjli.so /usr/lib/` Or `echo /usr/local/java/jre/lib/amd64/jli/ > /etc/ld.so.conf`
 Refer to the issue link: https://github.com/kaitoy/pcap4j/issues/63
 
+##### Syslog #####
+For Linux User: to receive syslog data from remote data source, you must do two things:
+* 1. Configure the rsyslog service in data source:
+    After installing rsyslog in Ubuntu or CentOS, you could configure as following:
+    `sudo vim /etc/rsyslog.conf`, add `*.* @Your_IP:Your_Port`\(UDP\) `*.* @@localhost:514`\(TCP\) in the conf file;
+    restart the service `sudo service rsyslog restart`;
+* 2. Allow the port in your Firewall: 
+    iptables -A INPUT -p tcp -s Your_IP --dport Your_Port -j ACCEPT;
+    iptables -A INPUT -p udp -s Your_IP --dport Your_Port -j ACCEPT;
+For local test, just use localhost and port 514.
+
 #### How to build ####
 To build the project, you just need to run the `maven_package.sh` to package the project.
 
@@ -58,9 +71,9 @@ To build the project, you just need to run the `maven_package.sh` to package the
 To run the project, you should submit the task to Spark. Below is a demo code:
 
 * To run it locally
-~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master local[*] ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar ./configuration/config.properties
+~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master local[*] ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar file://./configuration/config.properties
 * To run it on servers
-~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master `Spark Master Address` ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar ./configuration/config.properties
+~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master `Spark Master Address` ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar file://./configuration/config.properties
 
 * Without user-defined configuration
 The properties is optional, you could leave it alone and you could use the defaul settings, below is the example:
@@ -82,14 +95,14 @@ docker run -it -p 8088:8088 -p 8042:8042 -p 4040:4040 -h sandbox your_user/your_
 --class "com.scorelab.openads.receiver.PcapReceiver" \
 --master yarn-cluster \
 `Path to the jar`/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar \
-`Path to the config`/config.properties
+file://`Path to the config`/config.properties
 
 OR:
 ~/spark/bin/spark-submit \
 --class "com.scorelab.openads.receiver.PcapReceiver" \
 --master yarn-client \
 `Path to the jar`/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar \
-`Path to the config`/config.properties
+file://`Path to the config`/config.properties
 
 * Version
 Hadoop 2.6.0 and Apache Spark v1.6.0 on Centos 
