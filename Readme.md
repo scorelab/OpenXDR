@@ -82,9 +82,9 @@ To build the project, you just need to run the `maven_package.sh` to package the
 To run the project, you should submit the task to Spark. Below is a demo code:
 
 * To run it locally
-~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master local[*] ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar file://./configuration/config.properties
+~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master local[*] ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar ./configuration/config.properties
 * To run it on servers
-~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master `Spark Master Address` ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar file://./configuration/config.properties
+~/spark/bin/spark-submit --class "com.scorelab.openads.receiver.PcapReceiver" --master `Spark Master Address` ./target/OpenADS-0.1-SNAPSHOT-jar-with-dependencies.jar ./configuration/config.properties
 
 * Without user-defined configuration
 The properties is optional, you could leave it alone and you could use the defaul settings, below is the example:
