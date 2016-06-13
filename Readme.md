@@ -57,16 +57,20 @@ Refer to the issue link: https://github.com/kaitoy/pcap4j/issues/63
 
 #### Syslog ####
 For Linux User: to receive syslog data from remote data source, you must do two things:
-* Configure the rsyslog service in data source (After installing rsyslog in Ubuntu or CentOS):
+* Configure the rsyslog service in data source (after installing rsyslog in Linux):
     * `sudo vim /etc/rsyslog.conf`
     * add `*.* @Your_IP:Your_Port`(UDP) `*.* @@localhost:514`(TCP) in the file;
     * restart the service `sudo service rsyslog restart`;
-* Allow the port in your Firewall: 
-    * iptables -A INPUT -p tcp -s Your_IP --dport Your_Port -j ACCEPT;
-    * iptables -A INPUT -p udp -s Your_IP --dport Your_Port -j ACCEPT;
+* Configure the receiver system:
+    * Allow the port in your Firewall: 
+        * `iptables -A INPUT -p tcp -s Your_IP --dport Your_Port -j ACCEPT`;
+        * `iptables -A INPUT -p udp -s Your_IP --dport Your_Port -j ACCEPT`;
+    * Grant permission to java (iff Your_Port is lower than 1024, such as 514):
+        * Grant Permission: `sudo setcap cap_net_bind_service+ep Your_Java_Path/bin/java`
+        * Find libjli.so: `find $JAVA_HOME -name 'libjli.so'`
+        * ln -s `Path2Java/lib/amd64/jli/libjli.so /usr/lib/`
 
 For local test, just use localhost and port 514.
-
 
 How to use
 ----------
