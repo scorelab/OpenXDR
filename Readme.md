@@ -44,7 +44,7 @@ The software is tested on Ubuntu 16.04 LTS
 Important prerequisites
 -----------------------
 
-#### Pcap #### 
+#### Pcap ####
 Pcap4j needs root's right to access network and device. So, before deploying, please ensure to run the following line:
 	`setcap cap_net_raw,cap_net_admin=eip /path/to/java`
 for example, mine is `setcap cap_net_raw,cap_net_admin=eip /usr/local/java`
