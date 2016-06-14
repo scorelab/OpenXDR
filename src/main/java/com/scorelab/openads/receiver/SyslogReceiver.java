@@ -22,7 +22,9 @@ import org.apache.spark.streaming.receiver.Receiver;
  * @author xiaolei
  */
 public class SyslogReceiver extends Receiver<String> {
-    int port = -1;
+	private static final long serialVersionUID = -6451103013302237592L;
+	
+	int port = -1;
     
     /**
      * Define the IP and port of data source.
@@ -50,7 +52,8 @@ public class SyslogReceiver extends Receiver<String> {
         // is designed to stop by itself isStopped() returns false
     }
     
-    private void receive() {
+    @SuppressWarnings("resource")
+	private void receive() {
         try {
             DatagramSocket serverSocket;
             serverSocket = new DatagramSocket(port);
@@ -115,6 +118,9 @@ public class SyslogReceiver extends Receiver<String> {
                 JavaStreamingContext jsc = new JavaStreamingContext(sparkConf, Durations.seconds(3));
                 JavaReceiverInputDStream<String> lines;
                 
+                /**
+                 * Basic configuration
+                 */
                 String port_temp = null;
                 int default_port = 514;
                 if(!config.isEmpty()){
@@ -127,7 +133,10 @@ public class SyslogReceiver extends Receiver<String> {
                 else{
                     lines = jsc.receiverStream(new SyslogReceiver(default_port));
                 }
-
+                
+                /**
+                 * Set the checkpoint
+                 */
                 if(checkpointDir != null && checkpointDir.trim().length() > 0)
                     jsc.checkpoint(checkpointDir);
                 else
