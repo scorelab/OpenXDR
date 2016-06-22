@@ -18,6 +18,9 @@ import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.receiver.Receiver;
+import org.graylog2.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
+
+import com.google.gson.Gson;
 /**
  *
  * @author xiaolei
@@ -63,6 +66,9 @@ public class SyslogTcpReceiver extends Receiver<String> {
             System.out.printf("Listening on tcp:%s:%d%n",
                     InetAddress.getLocalHost().getHostAddress(), port);
             
+            //Using Gson to store the detail of data information
+            Gson gson = new Gson();
+            
             /**
             * Start to retrieve data packet
             */
@@ -73,7 +79,8 @@ public class SyslogTcpReceiver extends Receiver<String> {
                   outstream.write(receiveData);
                   builder.append(receiveData);
                   System.out.println("RECEIVED: " + builder.toString());
-                  store(builder.toString());
+                  StructuredSyslogServerEvent event = new StructuredSyslogServerEvent(builder.toString(), InetAddress.getLocalHost());
+                  store(gson.toJson(event));
             }
         } catch (Throwable t) {
             // restart if there is any other error

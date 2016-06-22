@@ -13,6 +13,7 @@ import org.pcap4j.packet.Packet;
  */
 public class PcapPacketEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
+	final String type = "pcap";
 	Timestamp time = null;
 	Packet packet = null;
 	
@@ -57,7 +58,15 @@ public class PcapPacketEntity implements Serializable{
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
-		return "PacketEntity [time=" + time + ", packet=" + packet + "]";
+		return "PcapPacketEntity [type=" + type + ", time=" + time + ", packet=" + packet + "]";
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
 	}
 }

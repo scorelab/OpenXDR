@@ -59,7 +59,7 @@ Refer to the issue link: https://github.com/kaitoy/pcap4j/issues/63
 For Linux User: to receive syslog data from remote data source, you must do two things:
 * Configure the rsyslog service in data source (after installing rsyslog in Linux):
     * `sudo vim /etc/rsyslog.conf`
-    * add `*.* @Your_IP:Your_Port`(UDP) `*.* @@localhost:514`(TCP) in the file;
+    * add `*.* @Your_IP:Your_Port;RSYSLOG_SyslogProtocol23Format`(UDP) `*.* @@localhost:514;RSYSLOG_SyslogProtocol23Format`(TCP) in the file;
     * restart the service `sudo service rsyslog restart`;
 * Configure the receiver system:
     * Allow the port in your Firewall: 

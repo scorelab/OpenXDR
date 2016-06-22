@@ -27,6 +27,7 @@
 	</build>
 	
     <dependencies>
+    	<!-- Pcap4j dependency -->
         <dependency>
             <groupId>org.pcap4j</groupId>
             <artifactId>pcap4j-core</artifactId>
@@ -37,7 +38,14 @@
             <artifactId>pcap4j-packetfactory-static</artifactId>
             <version>1.6.2</version>
         </dependency>
-        <dependency> <!-- Spark dependency -->
+        <!-- Syslog4j dependency -->
+        <dependency>
+			<groupId>org.graylog2</groupId>
+			<artifactId>syslog4j</artifactId>
+			<version>0.9.55</version>
+		</dependency>
+		<!-- Spark dependency -->
+        <dependency> 
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
             <version>1.5.2</version>
@@ -57,6 +65,7 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- Utilities dependency -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>

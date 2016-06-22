@@ -17,6 +17,9 @@ import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.receiver.Receiver;
+import org.graylog2.syslog4j.server.impl.event.structured.StructuredSyslogServerEvent;
+
+import com.google.gson.Gson;
 /**
  *
  * @author xiaolei
@@ -57,20 +60,26 @@ public class SyslogReceiver extends Receiver<String> {
         try {
             DatagramSocket serverSocket;
             serverSocket = new DatagramSocket(port);
-            byte[] receiveData = new byte[1024];
+            byte[] receiveData = new byte[2048];
 
             System.out.printf("Listening on udp:%s:%d%n",
                     InetAddress.getLocalHost().getHostAddress(), port);     
             DatagramPacket receivePacket = new DatagramPacket(receiveData,
                            receiveData.length);
+            
+            //Using Gson to store the detail of data information
+            Gson gson = new Gson();
+            
             /**
             * Start to retrieve
             */
             while(!isStopped()){
                   serverSocket.receive(receivePacket);
-                  String sentence = new String( receivePacket.getData());
-                  System.out.println("RECEIVED: " + sentence);
-                  store(sentence);
+                  StringBuilder builder = new StringBuilder();
+                  builder.append(receivePacket.getData());
+                  System.out.println("RECEIVED: " + builder.toString());
+                  StructuredSyslogServerEvent event = new StructuredSyslogServerEvent(builder.toString(), InetAddress.getLocalHost());
+                  store(gson.toJson(event));
             }
         } catch (Throwable t) {
             // restart if there is any other error
