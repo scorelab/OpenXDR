@@ -1,6 +1,7 @@
 *.class
 target/
 copy/
+checkpoint/
 
 # Package Files #
 *.jar
