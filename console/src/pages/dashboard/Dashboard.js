@@ -4,6 +4,7 @@ import { Container, Grid, Paper } from '@mui/material';
 
 import './Dashboard.css';
 import PageToolbar from '../../components/PageToolbar';
+import FlatPaper from '../../components/FlatPaper';
 
 function Dashboard() {
 
@@ -14,7 +15,7 @@ function Dashboard() {
         <Grid container spacing={3}>
           {/* Chart */}
           <Grid item xs={12} md={8} lg={9}>
-            <Paper
+            <FlatPaper
               sx={{
                 p: 2,
                 display: 'flex',
@@ -23,11 +24,11 @@ function Dashboard() {
               }}
             >
               {/* <Chart /> */}
-            </Paper>
+            </FlatPaper>
           </Grid>
           {/* Recent Deposits */}
           <Grid item xs={12} md={4} lg={3}>
-            <Paper
+            <FlatPaper
               sx={{
                 p: 2,
                 display: 'flex',
@@ -36,13 +37,13 @@ function Dashboard() {
               }}
             >
               {/* <Deposits /> */}
-            </Paper>
+            </FlatPaper>
           </Grid>
           {/* Recent Orders */}
           <Grid item xs={12}>
-            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+            <FlatPaper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
               {/* <Orders /> */}
-            </Paper>
+            </FlatPaper>
           </Grid>
         </Grid>
         {/* <Copyright sx={{ pt: 4 }} /> */}
