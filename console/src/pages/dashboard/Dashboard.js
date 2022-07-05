@@ -5,6 +5,9 @@ import { Container, Grid, Paper } from '@mui/material';
 import './Dashboard.css';
 import PageToolbar from '../../components/PageToolbar';
 import FlatPaper from '../../components/FlatPaper';
+import ComponentStats from './sections/ComponentStats';
+import LogStats from './sections/LogStats';
+import ActiveComponentList from './sections/ActiveComponentList';
 
 function Dashboard() {
 
@@ -13,40 +16,36 @@ function Dashboard() {
       <PageToolbar title="Dashboard" />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
-          {/* Chart */}
-          <Grid item xs={12} md={8} lg={9}>
+          <Grid item xs={12} md={7} lg={4}>
             <FlatPaper
               sx={{
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 240,
+                height: 320,
               }}
             >
-              {/* <Chart /> */}
+              <ComponentStats />
             </FlatPaper>
           </Grid>
-          {/* Recent Deposits */}
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} md={7} lg={8}>
             <FlatPaper
               sx={{
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 240,
+                height: 320,
               }}
             >
-              {/* <Deposits /> */}
+              <LogStats />
             </FlatPaper>
           </Grid>
-          {/* Recent Orders */}
           <Grid item xs={12}>
             <FlatPaper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              {/* <Orders /> */}
+              <ActiveComponentList />
             </FlatPaper>
           </Grid>
         </Grid>
-        {/* <Copyright sx={{ pt: 4 }} /> */}
       </Container>
     </div>
   );
