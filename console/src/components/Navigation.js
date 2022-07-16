@@ -3,13 +3,15 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import SettingsIcon from '@mui/icons-material/Settings';
-import WidgetsIcon from '@mui/icons-material/Widgets';
-import EditIcon from '@mui/icons-material/Edit';
+import DashboardIcon from '@mui/icons-material/DashboardOutlined';
+import SettingsIcon from '@mui/icons-material/SettingsOutlined';
+import InfoIcon from '@mui/icons-material/InfoOutlined';
+import WidgetsIcon from '@mui/icons-material/WidgetsOutlined';
+import DesignServicesIcon from '@mui/icons-material/DesignServicesOutlined';
 import { NavLink } from 'react-router-dom';
+import { Divider, List } from '@mui/material';
 
-export const mainListItems = (
+const mainList = (
     <React.Fragment>
         <ListItemButton component={NavLink} to="/dashboard">
             <ListItemIcon>
@@ -19,7 +21,7 @@ export const mainListItems = (
         </ListItemButton>
         <ListItemButton component={NavLink} to="/editor">
             <ListItemIcon>
-                <EditIcon />
+                <DesignServicesIcon />
             </ListItemIcon>
             <ListItemText primary="Editor" />
         </ListItemButton>
@@ -32,17 +34,36 @@ export const mainListItems = (
     </React.Fragment>
 );
 
-export const secondaryListItems = (
+
+const secondaryList = (
     <React.Fragment>
         <ListSubheader component="div" inset>
             Other
         </ListSubheader>
 
-        <ListItemButton component={NavLink}  to="/settings">
+        <ListItemButton component={NavLink} to="/settings">
             <ListItemIcon>
                 <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Settings" />
         </ListItemButton>
+        <ListItemButton component={NavLink} to="/about">
+            <ListItemIcon>
+                <InfoIcon />
+            </ListItemIcon>
+            <ListItemText primary="About" />
+        </ListItemButton>
     </React.Fragment>
 );
+
+function Navigation() {
+    return <List component="nav" >
+        {mainList}
+        <Divider sx={{ my: 1 }} />
+        {secondaryList}
+    </List>
+};
+
+
+export default Navigation;
+

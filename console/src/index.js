@@ -9,9 +9,10 @@ import {
 
 import App from './App';
 import Dashboard from './pages/dashboard/Dashboard';
-import Settings from './pages/settings/Settings';
 import Editor from './pages/editor/Editor';
 import Components from './pages/components/Components';
+import About from './pages/about/About';
+import Settings from './pages/settings/Settings';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,8 +21,9 @@ ReactDOM.render(
         <Route path="/" element={<App />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="editor" element={<Editor />} />
-          <Route path="settings" element={<Settings />} />
           <Route path="components" element={<Components />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="about" element={<About />} />
         </Route>
       </Routes>
     </BrowserRouter>
