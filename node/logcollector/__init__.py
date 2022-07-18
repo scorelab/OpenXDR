@@ -1,13 +1,8 @@
-import asyncio
-import json
 import os
-
-import websockets
 import time
 
 
-async def view_log(websocket):
-    filename =  json.load('log.json').get('sys')
+def logtreem(websocket, filename):
     file = open(filename, 'r')
     st_results = os.stat(filename)
     st_size = st_results[6]
@@ -22,7 +17,3 @@ async def view_log(websocket):
         else:
             await websocket.send(line)
 
-
-async def serve(host: str, port: int):
-    async with websockets.serve(view_log, host, port):
-        await asyncio.Future()
