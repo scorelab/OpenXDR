@@ -13,7 +13,8 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLongOutlined';
 import StopIcon from '@mui/icons-material/StopCircleOutlined';
 import StartIcon from '@mui/icons-material/PlayCircleOutline';
 import RestartIcon from '@mui/icons-material/RestartAltOutlined';
-
+import ComponentDetails from '../component_details/ComponentDetails';
+import ClosableModel from '../../components/ClosableModel';
 
 function createData(
   name,
@@ -41,6 +42,8 @@ function renderStatus(status) {
       return <Chip label={status} color='error' size='small' />
     case 'pending':
       return <Chip label={status} color='info' size='small' />
+    default:
+      break;
   }
 }
 
@@ -65,8 +68,11 @@ function renderActions(status) {
           <Button><StartIcon /></Button>
         </ButtonGroup>
       )
+    default:
+      break;
   }
 }
+
 
 function ComponentTable() {
   return (
@@ -107,19 +113,27 @@ function ComponentTable() {
 }
 
 function ComponentList(props) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
-    <Paper>
-      <Toolbar sx={{ pl: 0 }}>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Log Collectors
-        </Typography>
-        <Button variant="outlined" startIcon={<AddIcon />}>
-          Add
-        </Button>
-      </Toolbar>
-      <Divider />
-      <ComponentTable />
-    </Paper>
+    <>
+      <ClosableModel open={open} onClose={handleClose} title={'Add Log Collector'}>
+        <ComponentDetails />
+      </ClosableModel>
+      <Paper>
+        <Toolbar sx={{ pl: 0 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Log Collectors
+          </Typography>
+
+          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleOpen}>Add</Button>
+        </Toolbar>
+        <Divider />
+        <ComponentTable />
+      </Paper>
+    </>
   )
 }
 
