@@ -17,6 +17,7 @@ const rows = [
   createData('System Log', 'log_collector', '5 hrs'),
   createData('Auth Log', 'log_collector', '10 hrs'),
   createData('Flink-Instance-1', 'pu', '10 hrs'),
+  createData('Flink-Instance-2', 'pu', '10 hrs'),
   createData('Kudu-Cluster-2', 'storage', '10 hrs')
 ];
 

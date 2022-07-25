@@ -28,7 +28,7 @@ function ComponentStats() {
       </Typography>
       <Grid container spacing={6}>
         <Grid item xs={6}>
-          <SingleCompnonent type="Probes" count={5} />
+          <SingleCompnonent type="Log Collectors" count={5} />
         </Grid>
         <Grid item xs={6}>
           <SingleCompnonent type="Processing Units" count={2} />
