@@ -1,0 +1,5 @@
+flask~=2.1.3
+six~=1.16.0
+connexion~=2.14.1
+python-dotenv~=0.20.0
+sqlalchemy~=1.4.40

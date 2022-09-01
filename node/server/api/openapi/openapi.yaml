@@ -1,0 +1,303 @@
+openapi: 3.0.0
+info:
+  title: Console API
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /logs:
+    get:
+      description: Get all the log collectors
+      operationId: get_all
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Log'
+                type: array
+          description: OK
+      summary: getLogCollectors
+      tags: []
+      x-openapi-router-controller: api.controllers.logs
+    post:
+      description: Create a new log collector
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/logs_create_request'
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Accepted
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+      summary: createLogCollector
+      tags: []
+      x-openapi-router-controller: api.controllers.logs
+  /logs/{logId}:
+    delete:
+      description: Delete an existing log collector
+      operationId: delete
+      parameters:
+      - explode: false
+        in: path
+        name: logId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not Found
+      summary: deleteLogCollector
+      tags: []
+      x-openapi-router-controller: api.controllers.logs
+    get:
+      description: Get a single log collector
+      operationId: get
+      parameters:
+      - explode: false
+        in: path
+        name: logId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not Found
+      summary: getLogCollector
+      tags: []
+      x-openapi-router-controller: api.controllers.logs
+    put:
+      description: Update an existing log collector
+      operationId: update
+      parameters:
+      - explode: false
+        in: path
+        name: logId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not Found
+      summary: updateLogCollector
+      tags: []
+      x-openapi-router-controller: api.controllers.logs
+  /logs/{logId}/action:
+    post:
+      description: Run actions on a given log collector
+      operationId: action
+      parameters:
+      - explode: false
+        in: path
+        name: logId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/logs_action_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: Not Found
+      summary: runLogCollectorAction
+      tags: []
+      x-openapi-router-controller: api.controllers.logs
+components:
+  responses: {}
+  schemas:
+    Log:
+      description: Deployable log collector instances of OpenXDR (i.e. Linux System
+        Logs)
+      example:
+        id: string
+        name: System Log
+        os: linux
+        source: /var/log/syslog
+        status: active
+        createdDate: 2019-08-24
+      properties:
+        id:
+          type: integer
+        name:
+          example: System Log
+          type: string
+        os:
+          enum:
+          - linux
+          - macos
+          - win
+          example: linux
+          type: string
+        source:
+          example: /var/log/syslog
+          format: uri
+          type: string
+        status:
+          default: pending
+          enum:
+          - active
+          - disabled
+          - pending
+          example: active
+          type: string
+        createdDate:
+          format: date-time
+          type: string
+      required:
+      - name
+      - os
+      - source
+      - status
+      title: Log
+      type: object
+    ApiError:
+      description: Description of an error
+      properties:
+        msg:
+          example: Operation Failed
+          title: msg
+          type: string
+        timestamp:
+          format: date-time
+          title: timestamp
+          type: string
+      required:
+      - msg
+      - timestamp
+      title: ApiError
+      type: object
+    ApiResponse:
+      description: Description of a response
+      example:
+        msg: Operation Successful
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        msg:
+          example: Operation Successful
+          title: msg
+          type: string
+        timestamp:
+          format: date-time
+          title: timestamp
+          type: string
+      required:
+      - msg
+      - timestamp
+      title: ApiResponse
+      type: object
+    logs_create_request:
+      properties:
+        name:
+          example: System Log
+          title: name
+          type: string
+        os:
+          enum:
+          - linux
+          - macos
+          - win
+          example: linux
+          title: os
+          type: string
+        source:
+          example: /var/log/syslog
+          format: uri
+          title: source
+          type: string
+      required:
+      - name
+      - os
+      - source
+      title: logs_create_request
+      type: object
+    logs_action_request:
+      properties:
+        action:
+          enum:
+          - start
+          - stop
+          - restart
+          example: start
+          title: action
+          type: string
+      required:
+      - action
+      title: logs_action_request
+      type: object
+x-stoplight:
+  id: tljb28ukxlk88
