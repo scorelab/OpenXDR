@@ -1,0 +1,16 @@
+{
+  "linux": {
+    "sys": "/var/log/syslog",
+    "auth": "/var/log/auth.log",
+    "boot": "/var/log/boot.log",
+    "maillog": "/var/log/maillog",
+    "kernel": "/var/log/kern",
+    "dmesg": "/var/log/dmesg",
+    "faillog": "/var/log/faillog",
+    "cron": "/var/log/cron",
+    "yum": "/var/log/yum.log",
+    "httpd": "/var/log/httpd/"
+  },
+  "mac": {},
+  'windows': {}
+}
