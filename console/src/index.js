@@ -1,10 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 
 import App from './App';
@@ -14,11 +15,14 @@ import Components from './pages/components/Components';
 import About from './pages/about/About';
 import Settings from './pages/settings/Settings';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}>
+        <Route path="/" element={<App />} >
+          <Route index element={<Navigate to={"/dashboard"} replace={true} />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="editor" element={<Editor />} />
           <Route path="components" element={<Components />} />
@@ -27,8 +31,7 @@ ReactDOM.render(
         </Route>
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root'),
+  </React.StrictMode>
 );
 
 // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
