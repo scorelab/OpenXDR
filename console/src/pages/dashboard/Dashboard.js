@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Container, Grid, Paper } from '@mui/material';
 
@@ -9,7 +9,24 @@ import ComponentStats from './sections/ComponentStats';
 import LogStats from './sections/LogStats';
 import ActiveComponentList from './sections/ActiveComponentList';
 
+import * as ConsoleApi from '../../services';
+
 function Dashboard() {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    var api = new ConsoleApi.DefaultApi()
+    var callback = function (error, data, response) {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log('API called successfully. Returned data: ' + data);
+        setLogs(data)
+      }
+    };
+    api.getAll(callback);
+  }, [])
+
 
   return (
     <div className="Dashboard">
@@ -25,7 +42,7 @@ function Dashboard() {
                 height: 320,
               }}
             >
-              <ComponentStats />
+              <ComponentStats data={{'logs': logs.length, 'pu': 'N/A', 'sc': 'N/A', 'indexes': 'N/A'}}/>
             </FlatPaper>
           </Grid>
           <Grid item xs={12} md={7} lg={8}>
@@ -42,7 +59,7 @@ function Dashboard() {
           </Grid>
           <Grid item xs={12}>
             <FlatPaper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <ActiveComponentList />
+              <ActiveComponentList logs={logs.filter(l => l.status === 'active')}/>
             </FlatPaper>
           </Grid>
         </Grid>

@@ -1,11 +1,6 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
-
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 
 function SingleCompnonent({ type, count }) {
@@ -20,7 +15,7 @@ function SingleCompnonent({ type, count }) {
 }
 
 
-function ComponentStats() {
+function ComponentStats({data}) {
   return (
     <React.Fragment>
       <Typography component="div" variant="h6" color="primary" gutterBottom>
@@ -28,16 +23,16 @@ function ComponentStats() {
       </Typography>
       <Grid container spacing={6}>
         <Grid item xs={6}>
-          <SingleCompnonent type="Log Collectors" count={5} />
+          <SingleCompnonent type="Log Collectors" count={data.logs} />
         </Grid>
         <Grid item xs={6}>
-          <SingleCompnonent type="Processing Units" count={2} />
+          <SingleCompnonent type="Processing Units" count={data.pu} />
         </Grid>
         <Grid item xs={6}>
-          <SingleCompnonent type="Storage Clusters" count={1} />
+          <SingleCompnonent type="Storage Clusters" count={data.sc} />
         </Grid>
         <Grid item xs={6}>
-          <SingleCompnonent type="Indexes" count={4} />
+          <SingleCompnonent type="Indexes" count={data.indexes} />
         </Grid>
       </Grid>
     </React.Fragment>

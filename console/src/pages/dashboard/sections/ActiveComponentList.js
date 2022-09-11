@@ -43,7 +43,7 @@ function renderComponentTypeIcon(type) {
   }
 }
 
-function ActiveComponentList() {
+function ActiveComponentList({logs}) {
 
   return (
     <React.Fragment>
@@ -61,17 +61,17 @@ function ActiveComponentList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {logs.map((row) => (
               <TableRow
-                key={row.name}
+                key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell>{renderComponentTypeIcon(row.type)}</TableCell>
+                <TableCell>{renderComponentTypeIcon('log_collector')}</TableCell>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell>{renderComponentType(row.type)}</TableCell>
-                <TableCell>{row.uptime}</TableCell>
+                <TableCell>{renderComponentType('log_collector')}</TableCell>
+                <TableCell>{"N/A"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
